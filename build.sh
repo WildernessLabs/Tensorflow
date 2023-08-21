@@ -102,11 +102,11 @@ check_command_status
 #   Always remove the last build as there are cases where the previous build
 #   casuses some file not to be built.
 #
-run_command "make -j clean"
+run_command "make -j8 clean"
 check_command_status
 
 #
 #   Now build the system.
 #
-run_command "make -j $MAKE_OPTIONS"
+run_command "make -j8 $MAKE_OPTIONS"
 check_command_status

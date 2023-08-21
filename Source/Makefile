@@ -34,7 +34,8 @@
 ############################################################################
 
 TOPDIR = ../../Meadow/nuttx
-include $(TOPDIR)$(DELIM)/tools/Config.mk
+include $(TOPDIR)/.config
+include $(TOPDIR)/tools/Config.mk
 # -include $(SDKDIR)/Make.defs
 
 CUR_DIR=$(shell pwd)

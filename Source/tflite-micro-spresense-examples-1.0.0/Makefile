@@ -32,6 +32,9 @@
 # Define empty variable for add spresense specific settings
 SPRESENSE_PLATFORM_FLAGS :=
 
+TOPDIR = ../../../Meadow/nuttx
+include $(TOPDIR)/.config
+
 ifneq ($(SPRESENSE_DEFS),)
 
 # Load Spresense Config
@@ -141,9 +144,9 @@ LIBS := \
 
 TFLM_CC_SRCS := $(shell find tensorflow -name "*.cc" -o -name "*.c")
 
-# ifeq ($(CONFIG_TENSORFLOW_TESTS),y)
-TFLM_CC_SRCS += $(wildcard tests/hello_world/*.cc)
-# endif
+ifeq ($(CONFIG_TENSORFLOW_TESTS),y)
+  TFLM_CC_SRCS += $(wildcard tests/hello_world/*.cc)
+endif
 
 THIRD_PARTY_CC_SRCS := \
   $(THIRD_PARTY_CC_SRCS) \

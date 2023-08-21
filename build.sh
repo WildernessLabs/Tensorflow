@@ -80,6 +80,19 @@ if [[ "$scriptdir" == "/project" ]]; then
 fi
 
 #
+#   Check prerequisites.
+#
+if [ ! -d $scriptdir/../Meadow/aot-support ]; then
+    echo "Meadow AOT support directory not found."
+    exit 2
+else
+  if [ ! -f $scriptdir/../Meadow/aot-support/libbuiltin.a ]; then
+    run_command "make -C $scriptdir/../Meadow/aot-support"
+    check_command_status
+  fi
+fi
+
+#
 #   Run everything from the Source directory.
 #
 run_command "cd $scriptdir/Source"

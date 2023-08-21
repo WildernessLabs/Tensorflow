@@ -31,7 +31,7 @@ jobs:
       run: docker build -t nuttx-build -f Meadow/Dockerfile .
 
     - name: Configure NuttX for Tensorflow build
-      run: docker run --rm -v $PWD:/project -w /project --user "$(id -u):$(id -g)" nuttx-build ./Meadow/build.sh --config
+      run: docker run --rm -v $PWD:/project -w /project --user "$(id -u):$(id -g)" nuttx-build ./Meadow/build.sh --configure
 
     - name: Build Tensorflow DLL
       run: docker run --rm -v $PWD:/project -w /project --user "$(id -u):$(id -g)" nuttx-build ./Tensorflow/build.sh

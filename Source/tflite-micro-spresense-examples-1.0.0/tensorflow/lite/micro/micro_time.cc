@@ -3,6 +3,7 @@
 #include "../../../../../../Meadow/nuttx/include/nuttx/config.h"
 
 #include <cstdint>
+#include <time.h>
 
 namespace tflite 
 {
@@ -17,7 +18,16 @@ int32_t ticks_per_second()
 // Return time in ticks.  The meaning of a tick varies per platform.
 int32_t GetCurrentTimeTicks()
 {
-    return(0);
+    clock_t ticks = clock();
+    int32_t result;
+
+#ifdef CONFIG_SYSTEM_TIME64
+    result = ticks & 0xffffffff;
+#else
+    result = ticks;
+#endif
+
+    return(result);
 }
 
 }

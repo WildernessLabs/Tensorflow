@@ -1,0 +1,36 @@
+name: Build Tensorflow
+
+on:
+  repository_dispatch:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Tensorflow source code
+      uses: actions/checkout@v3
+      with:
+        path: Tensorflow
+        set-safe-directory: True
+
+    - name: Checkout Meadow source code
+      uses: actions/checkout@v3
+      with:
+        repository: WildernessLabs/Meadow
+        path: Meadow
+        set-safe-directory: True
+
+    - name: Build Docker image for the OS build
+      run: docker build -t nuttx-build Meadow/Dockerfile
+
+    - name: Configure NuttX for Tensorflow build
+      run: docker run --rm -v $PWD:/project -w /project --user "$(id -u):$(id -g)" nuttx-build ./build.sh --config
+
+    - name: Build Tensorflow DLL
+      run: docker run --rm -v $PWD:/project -w /project --user "$(id -u):$(id -g)" nuttx-build Tensorflow/build.sh

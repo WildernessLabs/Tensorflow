@@ -25,13 +25,14 @@ jobs:
         repository: WildernessLabs/Meadow
         path: Meadow
         set-safe-directory: True
+        submodules: True
         token: ${{ secrets.CI_ACCESS_TOKEN }}
         ref: TensorflowDLL
 
     - name: Build Docker image for the OS build
       run: docker build -t nuttx-build -f Meadow/Dockerfile .
 
-    - name: Configure NuttX for Tensorflow build
+    - name: Build NuttX for Tensorflow
       run: docker run --rm -v $PWD:/project -w /project --user "$(id -u):$(id -g)" nuttx-build ./Meadow/build.sh --force
 
     - name: Build Tensorflow DLL

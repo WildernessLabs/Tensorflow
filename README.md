@@ -1,5 +1,7 @@
 # Tensorflow
 
+Build status: [![Main Branch](https://github.com/WildernessLabs/Tensorflow/actions/workflows/build.yml/badge.svg)](https://github.com/WildernessLabs/Tensorflow/actions/workflows/build.yml)
+
 This library is a port of the Sony Spresense Tensorflow port and the original cade can be found here:
 
 * [Main Spresense repository](https://github.com/sonydevworld/spresense)

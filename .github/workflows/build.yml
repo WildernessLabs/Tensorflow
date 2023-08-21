@@ -25,6 +25,7 @@ jobs:
         repository: WildernessLabs/Meadow
         path: Meadow
         set-safe-directory: True
+        token: ${{ secrets.CI_ACCESS_TOKEN }}
 
     - name: Build Docker image for the OS build
       run: docker build -t nuttx-build Meadow/Dockerfile

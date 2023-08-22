@@ -27,7 +27,7 @@ jobs:
         set-safe-directory: True
         submodules: True
         token: ${{ secrets.CI_ACCESS_TOKEN }}
-        ref: TensorflowDLL
+        ref: DockerToSupportTensorflow
 
     - name: Build Docker image for the OS build
       run: docker build -t nuttx-build -f Meadow/Dockerfile .

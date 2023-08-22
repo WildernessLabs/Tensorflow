@@ -30,10 +30,34 @@ jobs:
         ref: DockerToSupportTensorflow
 
     - name: Build Docker image for the OS build
-      run: docker build --platform linux/amd64 -t nuttx-build -f Meadow/Dockerfile .
+      run: docker build -t nuttx-build -f Meadow/Dockerfile .
 
     - name: Build NuttX for Tensorflow
-      run: docker run --rm --platform linux/amd64 -v $PWD:/project -w /project --user "$(id -u):$(id -g)" nuttx-build ./Meadow/build.sh --force
+      run: docker run --rm -v $PWD:/project -w /project --user "$(id -u):$(id -g)" nuttx-build ./Meadow/build.sh --force
 
     - name: Build Tensorflow DLL
-      run: docker run --rm --platform linux/amd64 -v $PWD:/project -w /project --user "$(id -u):$(id -g)" nuttx-build ./Tensorflow/build.sh
+      run: docker run --rm -v $PWD:/project -w /project --user "$(id -u):$(id -g)" nuttx-build ./Tensorflow/build.sh
+
+    - name: Create zip file
+      run: cp Tensorflow/Tensorflow.so && Meadow/nuttx/Meadow.OS.* . && zip Tensorflow.zip Tensorflow.so Meadow.OS.* && rm Tensorflow.so Meadow.OS.*
+
+    - name: Create release
+      uses: actions/create-release@v1
+      id: create_release
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: ${{ github.ref }}
+        draft: true
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.CI_ACCESS_TOKEN }}
+
+    - name: Upload build artifacts
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./Tensorflow.zip
+        asset_name: ./Tensorflow.zip
+        asset_content_type: application/gzip

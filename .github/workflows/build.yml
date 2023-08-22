@@ -27,7 +27,6 @@ jobs:
         set-safe-directory: True
         submodules: True
         token: ${{ secrets.CI_ACCESS_TOKEN }}
-        ref: DockerToSupportTensorflow
 
     - name: Build Docker image for the OS build
       run: docker build -t nuttx-build -f Meadow/Dockerfile .
@@ -39,7 +38,7 @@ jobs:
       run: docker run --rm -v $PWD:/project -w /project --user "$(id -u):$(id -g)" nuttx-build ./Tensorflow/build.sh
 
     - name: Create zip file
-      run: cp Tensorflow/Tensorflow.so && Meadow/nuttx/Meadow.OS.* . && zip Tensorflow.zip Tensorflow.so Meadow.OS.* && rm Tensorflow.so Meadow.OS.*
+      run: docker run --rm -v $PWD:/project -w /project --user "$(id -u):$(id -g)" nuttx-build ./Tensorflow/create-zip.sh
 
     - name: Create release
       uses: actions/create-release@v1
@@ -55,7 +54,7 @@ jobs:
     - name: Upload build artifacts
       uses: actions/upload-release-asset@v1
       env:
-        GITHUB_TOKEN: ${{ github.token }}
+        GITHUB_TOKEN: ${{ secrets.CI_ACCESS_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ./Tensorflow.zip

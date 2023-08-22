@@ -74,9 +74,16 @@ Error output such as the following indicates that the OS has been compiled and d
 
 Reconfigure NuttX with unit tests enabled and then rebuild and redeploy the `Tensorflow.so` file.
 
-### `meadow` Command Show No Developer Tests Found
+### `meadow` Indicates that the Tensorflow Tests Cannot be Found
 
-This indicates that the OS does not have the Tesnorflow unit tests enabled in the OS.
+There are two possible error messages:
+
+* Test 11 cannot be found
+* No tests built into the system
+
+These indicate that the OS does not have the Tesnorflow unit test enabled in the OS or no tests have been compiled into the system.
+
+The command `meadow set developer -d 0` will list the tests that have been built into the OS.
 
 #### Resolution:
 

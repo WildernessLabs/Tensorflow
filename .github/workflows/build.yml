@@ -32,7 +32,7 @@ jobs:
       run: docker build -t nuttx-build -f Meadow/Dockerfile .
 
     - name: Build NuttX for Tensorflow
-      run: docker run --rm -v $PWD:/project -w /project --user "$(id -u):$(id -g)" nuttx-build ./Meadow/build.sh --force
+      run: docker run --rm -v $PWD:/project -w /project --user "$(id -u):$(id -g)" nuttx-build export MEADOW_ADDITIONAL_MAKE_OPTIONS="-j1" && ./Meadow/build.sh --force
 
     - name: Build Tensorflow DLL
       run: docker run --rm -v $PWD:/project -w /project --user "$(id -u):$(id -g)" nuttx-build ./Tensorflow/build.sh

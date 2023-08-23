@@ -23,7 +23,10 @@ The Tensorflow repository should be cloned at the same level as the Meadow repos
 This is necessary for two main reasons:
 
 * The Tensorflow library requires the `libbuiltin.a` archive file in the `Meadow` repository
+* Tensorflow is also linked to several of the NuttX C standard libraries
 * Configuration for the Tensorflow library is dependent upon the `.config` file in the Nuttx repository
+
+It is necessary to have a fully built NuttX system before attempting to built the Tensorflow DLL.
 
 The `Tensorflow.so` DLL can be built by running the `build.sh` script located in the root of the repository.
 

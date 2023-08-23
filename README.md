@@ -32,6 +32,8 @@ The `Tensorflow.so` DLL can be built by running the `build.sh` script located in
 
 ## Operating System Unit Test
 
+The library is supplied with three test applications, one of which is a numeric only test.  This test can be found in the [Source/tflite-micro-spresense-examples-1.0.0/tests/hello_world](Source/tflite-micro-spresense-examples-1.0.0/tests/hello_world) directory.
+
 The first stage to building the OS level unit tests is to turn on the Tensorflow unit tests in NuttX.  To do this, change to the directory containing the NuttX repository and execute the following command:
 
 ```bash

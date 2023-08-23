@@ -36,27 +36,3 @@ jobs:
 
     - name: Build Tensorflow DLL
       run: docker run --rm -v $PWD:/project -w /project --user "$(id -u):$(id -g)" nuttx-build ./Tensorflow/build.sh
-
-    - name: Create zip file
-      run: docker run --rm -v $PWD:/project -w /project --user "$(id -u):$(id -g)" nuttx-build ./Tensorflow/create-zip.sh
-
-    - name: Create release
-      uses: actions/create-release@v1
-      id: create_release
-      with:
-        tag_name: ${{ github.ref }}
-        release_name: ${{ github.ref }}
-        draft: true
-        prerelease: false
-      env:
-        GITHUB_TOKEN: ${{ secrets.CI_ACCESS_TOKEN }}
-
-    - name: Upload build artifacts
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.CI_ACCESS_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./Tensorflow.zip
-        asset_name: ./Tensorflow.zip
-        asset_content_type: application/gzip

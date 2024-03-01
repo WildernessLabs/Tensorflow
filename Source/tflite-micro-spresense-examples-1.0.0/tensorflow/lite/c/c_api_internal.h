@@ -1,0 +1,46 @@
+#ifndef TENSORFLOW_LITE_MICRO_C_C_API_INTERNAL_H_
+#define TENSORFLOW_LITE_MICRO_C_C_API_INTERNAL_H_
+#include <stdarg.h>
+
+#include <functional>
+#include <memory>
+#include <mutex>
+#include <vector>
+
+#include "tensorflow/lite/core/api/error_reporter.h"
+#include "tensorflow/lite/core/api/op_resolver.h"
+#include "tensorflow/lite/core/api/flatbuffer_conversions.h"
+#include "tensorflow/lite/core/api/c_api.h"
+#include "tensorflow/lite/micro/all_ops_resolver.h"
+#include "tensorflow/lite/schema/schema_generated.h"
+#include "tensorflow/lite/micro/micro_interpreter.h"
+
+struct TfLiteMicroErrorReporterCallback {
+  
+  void* user_data = nullptr;
+
+  void (*error_reporter)(void* user_data, const char* format,
+                         va_list args) = nullptr;
+};
+
+struct TfLiteMicroModel {
+    std::shared_ptr<const tflite::Model> model;
+};
+
+struct TfLiteMicroInterpreter {
+    
+    std::shared_ptr<const tflite::Model> model;
+    std::unique_ptr<tflite::MicroInterpreter> impl;
+    // std::unique_ptr<tflite::ErrorReporter> error_reporter;
+};
+
+struct TfLiteMicroInterpreterOption {
+    // tflite::MicroOpResolver *op_resolver;
+    uint8_t *arena;
+    size_t arena_size;
+    // std::unique_ptr<tflite::ErrorReporter> error_reporter;
+};
+
+
+
+#endif

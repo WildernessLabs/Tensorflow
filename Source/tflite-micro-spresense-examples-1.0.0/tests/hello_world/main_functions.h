@@ -30,7 +30,7 @@ void tensorflow_hello_world_test_setup(void);
 // Runs one iteration of data gathering and inference. This should be called
 // repeatedly from the application code. The name needs to be loop() for Arduino
 // compatibility.
-void tensorflow_hello_world_test_loop(uint32_t, uint32_t);
+void tensorflow_hello_world_test_loop(intptr_t, intptr_t);
 
 #ifdef __cplusplus
 }

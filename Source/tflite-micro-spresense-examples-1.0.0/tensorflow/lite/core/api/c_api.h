@@ -9,43 +9,44 @@
 #include "tensorflow/lite/c/c_api_internal.h"
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
-typedef struct TfLiteTensor TfLiteMicroSensor;
+    typedef struct TfLiteTensor TfLiteMicroSensor;
 
-typedef struct TfLiteMicroModel TfLiteMicroModel;
+    typedef struct TfLiteMicroModel TfLiteMicroModel;
 
-typedef struct TfLiteMicroInterpreterOption TfLiteMicroInterpreterOption;
+    typedef struct TfLiteMicroInterpreterOption TfLiteMicroInterpreterOption;
 
-TFL_CAPI_EXPORT void TfLitMicroGetModel (const void *model_data);
+    typedef struct TfLiteMicroModelOption TfLiteMicroModelOption;
 
-TFL_CAPI_EXPORT TfLiteMicroInterpreterOption* TfLiteMicroInterpreterOptionCreate();
+    typedef struct TfLiteMicroInterpreter  TfLiteMicroInterpreter;
 
-TFL_CAPI_EXPORT void TfLiteMicroModelDelete(TfLiteMicroModel *model);
+    TFL_CAPI_EXPORT TfLiteMicroModelOption *TfLiteMicroGetModel(uint8_t arena_size, uint8_t *arena, const void *model_data);
 
-TFL_CAPI_EXPORT void TfLiteMicroInterpreterOptionDelete(TfLiteMicroInterpreterOption* option);
+    TFL_CAPI_EXPORT void TfLiteMicroMalloc();
 
-TFL_CAPI_EXPORT TfLiteMicroInterpreter *TfLiteMicroInterpreterCreate(const TfLiteMicroModel *impl, const TfLiteMicroInterpreterOption *_option);
+    TFL_CAPI_EXPORT TfLiteMicroInterpreter *TfLiteMicroInterpreterCreate(TfLiteMicroInterpreterOption *interpeter_option, TfLiteMicroModelOption *model_option);
 
-TFL_CAPI_EXPORT void TfLiteMicroInterpreterDelete(TfLiteMicroInterpreter* option);
+    TFL_CAPI_EXPORT void TfLiteMicroInterpreterDelete(TfLiteMicroInterpreter *option);
 
-TFL_CAPI_EXPORT TfLiteStatus TfLiteMicroInterpreterAllocateTensors(TfLiteMicroInterpreter* interpreter);
+    TFL_CAPI_EXPORT TfLiteStatus TfLiteMicroInterpreterAllocateTensors(TfLiteMicroInterpreter *inter);
 
-TFL_CAPI_EXPORT TfLiteTensor *TfTFL_CAPI_EXPORTLiteMicroInterpreterGetInput(const TfLiteMicroInterpreter* interpreter, int32_t input_index);
+    TFL_CAPI_EXPORT TfLiteTensor *TfLiteMicroInterpreterGetInput(const TfLiteMicroInterpreter *inter, int32_t input_index);
 
-TFL_CAPI_EXPORT TfLiteTensor *TfLiteMicroInterpreterGetOutput(const TfLiteMicroInterpreter *interpreter, int32_t output_index);
+    TFL_CAPI_EXPORT TfLiteTensor *TfLiteMicroInterpreterGetOutput(const TfLiteMicroInterpreter *inter, int32_t output_index);
 
-TFL_CAPI_EXPORT int32_t TfLiteMicroInterpreterGetOutputCount(const TfLiteMicroInterpreter *interpreter);
+    TFL_CAPI_EXPORT int32_t TfLiteMicroInterpreterGetOutputCount(const TfLiteMicroInterpreter *inter);
 
-TFL_CAPI_EXPORT int32_t TfLiteMicroInterpreterGetInputCount(const TfLiteMicroInterpreter *interpreter);
+    TFL_CAPI_EXPORT int32_t TfLiteMicroInterpreterGetInputCount(const TfLiteMicroInterpreter *inter);
 
-TFL_CAPI_EXPORT TfLiteStatus TfLiteMicroInterpreterInvoke(TfLiteMicroInterpreter *interpreter);
+    TFL_CAPI_EXPORT TfLiteStatus TfLiteMicroInterpreterInvoke(TfLiteMicroInterpreter *inter);
 
-// TFL_CAPI_EXPORT TfLiteQuantizationParams TfLiteMicroTensorQuantizationParams (const TfLiteTensor *tensor);
+    TFL_CAPI_EXPORT TfLiteQuantizationParams TfLiteMicroTensorQuantizationParams (const TfLiteTensor *tensor);
 
 #ifdef __cplusplus
-    }
+}
 #endif
 
 #endif

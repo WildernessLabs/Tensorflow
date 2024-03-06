@@ -17,27 +17,16 @@
 
 namespace
 {
-
-    // class CallbackMicroErrorReporter : public tflite::MicroErrorReporter{
-    //     public:
-    //         explicit CallbackMicroErrorReporter(TfLiteMicroErrorReporterCallback callback)
-    //             :callback_(callback){}
-
-    //     int Report(const char* format, va_list args)override {
-    //         callback_.error_reporter(callback_.user_data, format, args);
-    //         return 0;
-    //     }
-
-    //     private:
-    //     TfLiteMicroErrorReporterCallback callback_;
-    // };
-
+    tflite::AllOpsResolver resolver;
+    tflite::ErrorReporter* error_reporter = nullptr;
 }
 
 extern "C"
 {
-    TfLiteMicroModel *TfLiteMicroGetModel(const void *model_data)
+    
+    TfLiteMicroModelOption *TfLiteMicroGetModel(uint8_t arena_size, uint8_t* arena, const void *model_data)
     {
+        printf("[ENTER] - TfLiteMicroGetModel\n");
         auto model = tflite::GetModel(model_data);
 
         if (model->version() != TFLITE_SCHEMA_VERSION)
@@ -45,23 +34,52 @@ extern "C"
             /**
              * Show message error or return some status
             */
+           printf("[ERROR] - Model provied is shema version %ld\n", model->version());
            return nullptr;
         }
+        static TfLiteMicroModelOption micro_option;
+        micro_option.arena = arena;
+        micro_option.arena_size = arena_size;
+        micro_option.model = model;
 
-        TfLiteMicroModel *tf_lite_micro_model = new TfLiteMicroModel;
-        tf_lite_micro_model->model = std::shared_ptr<const tflite::Model>(model);
-
-        return tf_lite_micro_model;
+        return &micro_option;
     }
 
-    void TfLiteMicroModelDelete(TfLiteMicroModel *model)
+    TfLiteMicroInterpreterOption *TfLiteMicroInterpreterOptionCreate(TfLiteMicroModelOption *option)
     {
-        delete model;
-    }
+        printf("[ENTER] - TfLiteMicroInterpreterOptionCreate\n");
+        if (option == nullptr)
+        {
+            printf("[ERROR] - Falied to create an interpreter option\n");
+            return nullptr;
+        }
     
-    TfLiteMicroInterpreterOption *TfLiteMicroInterpreterOptionCreate()
+        static TfLiteMicroInterpreterOption micro_interpreter_option;
+
+        micro_interpreter_option.error_reporter = error_reporter;
+        micro_interpreter_option.op_resolver = &resolver;
+
+        return &micro_interpreter_option;
+    }
+
+   TfLiteMicroInterpreter *TfLiteMicroInterpreterCreate(TfLiteMicroInterpreterOption *interpeter_option, TfLiteMicroModelOption *model_option)
     {
-        return new TfLiteMicroInterpreterOption{};
+        if (interpeter_option == nullptr || model_option == nullptr)
+        {
+            printf("[ERROR] Falied to create interpreter\n");
+            return nullptr;
+        }
+
+        static TfLiteMicroInterpreter micro_interpreter;
+        tflite::MicroInterpreter interpreter(model_option->model,
+                                                    tflite::AllOpsResolver{},
+                                                    model_option->arena,
+                                                    model_option->arena_size,
+                                                    interpeter_option->error_reporter,
+                                                    nullptr, nullptr);
+        micro_interpreter.interpreter = &interpreter;
+
+        return &micro_interpreter;
     }
 
     void TfLiteMicroInterpreterOptionDelete(TfLiteMicroInterpreterOption *option)
@@ -69,63 +87,57 @@ extern "C"
         delete option;
     }
 
-    TfLiteMicroInterpreter *TfLiteMicroInterpreterCreate(const TfLiteMicroModel *impl, const TfLiteMicroInterpreterOption *_option)
+    void TfLiteMicroModelDelete(TfLiteMicroModel *model)
     {
-        if (!impl || impl->model)
-        {
-            return nullptr;
-        }
-
-        // std::unique_ptr<tflite::ErrorReporter> option_error_reporter;
-        // if (option_error_reporter && _option->error_reporter_calback.error_reporter != nullptr)
-        // {
-        //    option_error_reporter = std::unique_ptr<CallbackMicroErrorReporter>(new CallbackMicroErrorReporter(_option->error_reporter_calback));
-        // }
-        tflite::MicroErrorReporter error;
-        // TODO : Create a method for selecting the number of OpResolver (MicroMutableOpResolver)
-        std::unique_ptr<tflite::MicroInterpreter> micro_interpreter(new tflite::MicroInterpreter(impl->model.get(), 
-                                                                                tflite::AllOpsResolver{},
-                                                                                _option->arena,
-                                                                                _option->arena_size,
-                                                                                &error,
-                                                                                nullptr,
-                                                                                nullptr));
-        return new TfLiteMicroInterpreter{impl->model, std::move(micro_interpreter)};
+        delete model;
     }
-
     void TfLiteMicroInterpreterDelete(TfLiteMicroInterpreter *option)
     {
         delete option;
     }
 
-    TfLiteStatus TfLiteMicroInterpreterAllocateTensors(TfLiteMicroInterpreter *interpreter)
+    void TfLiteMicroMalloc()
     {
-        return interpreter->impl->AllocateTensors();
-    }
+        printf("[INFO] - Call malloc ...\n");
+     
+        uint8_t *value = (uint8_t *)malloc(sizeof(uint8_t));
 
-    TfLiteTensor *TfLiteMicroInterpreterGetInput(const TfLiteMicroInterpreter *interpreter, int32_t input_index)
-    {
-        return interpreter->impl->input(input_index);
-    }
-
-    TfLiteTensor *TfLiteMicroInterpreterGetOutput(const TfLiteMicroInterpreter *interpreter, int32_t output_index)
-    {
-        return interpreter->impl->output(output_index);
-    }
-
-    int32_t TfLiteMicroInterpreterGetOutputCount(const TfLiteMicroInterpreter *interpreter)
-    {
-        return static_cast<int32_t>(interpreter->impl->outputs_size());
-    }
-
-    int32_t TfLiteMicroInterpreterGetInputCount(const TfLiteMicroInterpreter *interpreter)
-    {
-        return static_cast<int32_t>(interpreter->impl->inputs_size());
+        if (value != NULL)
+        {
+            printf("[INFO] - Successfully Allocated \n");
+            return;
+        }
+        printf("[ERROR] - Falied to allocated");
     }
     
-    TfLiteStatus TfLiteMicroInterpreterInvoke(TfLiteMicroInterpreter *interpreter)
+    TfLiteStatus TfLiteMicroInterpreterAllocateTensors(TfLiteMicroInterpreter *inter)
     {
-        return interpreter->impl->Invoke();
+        return inter->interpreter->AllocateTensors();
+    }
+
+    TfLiteTensor *TfLiteMicroInterpreterGetInput(const TfLiteMicroInterpreter *inter, int32_t input_index)
+    {
+        return inter->interpreter->input(input_index);
+    }
+
+    TfLiteTensor *TfLiteMicroInterpreterGetOutput(const TfLiteMicroInterpreter *inter, int32_t output_index)
+    {
+        return inter->interpreter->output(output_index);
+    }
+
+    int32_t TfLiteMicroInterpreterGetOutputCount(const TfLiteMicroInterpreter *inter)
+    {
+        return static_cast<int32_t>(inter->interpreter->outputs_size());
+    }
+
+    int32_t TfLiteMicroInterpreterGetInputCount(const TfLiteMicroInterpreter *inter)
+    {
+        return static_cast<int32_t>(inter->interpreter->inputs_size());
+    }
+    
+    TfLiteStatus TfLiteMicroInterpreterInvoke(TfLiteMicroInterpreter *inter)
+    {
+        return inter->interpreter->Invoke();
     }
 
     TfLiteQuantizationParams TfLiteMicroTensorQuantizationParams (const TfLiteTensor *tensor)

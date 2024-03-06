@@ -28,19 +28,20 @@ struct TfLiteMicroModel {
 };
 
 struct TfLiteMicroInterpreter {
+    tflite::MicroInterpreter *interpreter;
+};
+
+struct TfLiteMicroModelOption{
     
-    std::shared_ptr<const tflite::Model> model;
-    std::unique_ptr<tflite::MicroInterpreter> impl;
-    // std::unique_ptr<tflite::ErrorReporter> error_reporter;
+    uint8_t arena_size;
+    uint8_t *arena;
+    const tflite::Model *model;
 };
 
 struct TfLiteMicroInterpreterOption {
-    // tflite::MicroOpResolver *op_resolver;
-    uint8_t *arena;
-    size_t arena_size;
-    // std::unique_ptr<tflite::ErrorReporter> error_reporter;
+
+    const tflite::MicroOpResolver* op_resolver;
+    tflite::ErrorReporter* error_reporter;
 };
-
-
 
 #endif

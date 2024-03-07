@@ -23,7 +23,7 @@ extern "C"
 
     typedef struct TfLiteMicroInterpreter  TfLiteMicroInterpreter;
 
-    TFL_CAPI_EXPORT TfLiteMicroModelOption *TfLiteMicroGetModel(uint8_t arena_size, uint8_t *arena, const void *model_data);
+    TFL_CAPI_EXPORT TfLiteMicroModelOption *TfLiteMicroGetModel(int arena_size, uint8_t *arena, const void *model_data);
 
     TFL_CAPI_EXPORT void TfLiteMicroMalloc();
 
@@ -36,6 +36,10 @@ extern "C"
     TFL_CAPI_EXPORT TfLiteTensor *TfLiteMicroInterpreterGetInput(const TfLiteMicroInterpreter *inter, int32_t input_index);
 
     TFL_CAPI_EXPORT TfLiteTensor *TfLiteMicroInterpreterGetOutput(const TfLiteMicroInterpreter *inter, int32_t output_index);
+
+    TFL_CAPI_EXPORT int8_t TfLiteMicroGetData(const TfLiteTensor *tensor, int index);
+
+    TFL_CAPI_EXPORT void TfLiteMicroSetData(const TfLiteTensor *tensor, int index, int8_t value);
 
     TFL_CAPI_EXPORT int32_t TfLiteMicroInterpreterGetOutputCount(const TfLiteMicroInterpreter *inter);
 

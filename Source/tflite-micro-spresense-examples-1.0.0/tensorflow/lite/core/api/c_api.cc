@@ -18,15 +18,14 @@
 namespace
 {
     tflite::AllOpsResolver resolver;
-    tflite::ErrorReporter* error_reporter = nullptr;
+    static tflite::MicroErrorReporter micro_error_reporter;
 }
 
 extern "C"
 {
     
-    TfLiteMicroModelOption *TfLiteMicroGetModel(uint8_t arena_size, uint8_t* arena, const void *model_data)
+    TfLiteMicroModelOption *TfLiteMicroGetModel(int arena_size, uint8_t* arena, const void *model_data)
     {
-        printf("[ENTER] - TfLiteMicroGetModel\n");
         auto model = tflite::GetModel(model_data);
 
         if (model->version() != TFLITE_SCHEMA_VERSION)
@@ -47,17 +46,16 @@ extern "C"
 
     TfLiteMicroInterpreterOption *TfLiteMicroInterpreterOptionCreate(TfLiteMicroModelOption *option)
     {
-        printf("[ENTER] - TfLiteMicroInterpreterOptionCreate\n");
+
         if (option == nullptr)
         {
             printf("[ERROR] - Falied to create an interpreter option\n");
             return nullptr;
         }
-    
+
         static TfLiteMicroInterpreterOption micro_interpreter_option;
 
-        micro_interpreter_option.error_reporter = error_reporter;
-        micro_interpreter_option.op_resolver = &resolver;
+        micro_interpreter_option.error_reporter = &micro_error_reporter;
 
         return &micro_interpreter_option;
     }
@@ -71,8 +69,9 @@ extern "C"
         }
 
         static TfLiteMicroInterpreter micro_interpreter;
-        tflite::MicroInterpreter interpreter(model_option->model,
-                                                    tflite::AllOpsResolver{},
+
+        static tflite::MicroInterpreter interpreter(model_option->model,
+                                                    resolver,
                                                     model_option->arena,
                                                     model_option->arena_size,
                                                     interpeter_option->error_reporter,
@@ -91,6 +90,7 @@ extern "C"
     {
         delete model;
     }
+
     void TfLiteMicroInterpreterDelete(TfLiteMicroInterpreter *option)
     {
         delete option;
@@ -144,4 +144,15 @@ extern "C"
     {
         return tensor->params;
     }
+
+    int8_t TfLiteMicroGetData(const TfLiteTensor *tensor, int index)
+    {
+        return tensor->data.int8[index];
+    }
+
+    void TfLiteMicroSetData(const TfLiteTensor *tensor, int index, int8_t value)
+    {
+        tensor->data.int8[index] = value;
+    }
+
 }

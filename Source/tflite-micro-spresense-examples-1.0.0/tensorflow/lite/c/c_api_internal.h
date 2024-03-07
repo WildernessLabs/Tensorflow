@@ -33,14 +33,13 @@ struct TfLiteMicroInterpreter {
 
 struct TfLiteMicroModelOption{
     
-    uint8_t arena_size;
+    int arena_size;
     uint8_t *arena;
     const tflite::Model *model;
 };
 
 struct TfLiteMicroInterpreterOption {
 
-    const tflite::MicroOpResolver* op_resolver;
     tflite::ErrorReporter* error_reporter;
 };
 

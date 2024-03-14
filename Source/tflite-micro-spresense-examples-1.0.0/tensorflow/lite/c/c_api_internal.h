@@ -1,3 +1,11 @@
+/****************************************************************************
+ * c_api_internal.h
+ *
+ *   Copyright (C) 2020 Wilderness Labs. All rights reserved.
+ *   Author: Wilderness Labs
+ * 
+ ****************************************************************************/
+
 #ifndef TENSORFLOW_LITE_MICRO_C_C_API_INTERNAL_H_
 #define TENSORFLOW_LITE_MICRO_C_C_API_INTERNAL_H_
 #include <stdarg.h>
@@ -15,32 +23,31 @@
 #include "tensorflow/lite/schema/schema_generated.h"
 #include "tensorflow/lite/micro/micro_interpreter.h"
 
-struct TfLiteMicroErrorReporterCallback {
-  
-  void* user_data = nullptr;
+struct TfLiteMicroErrorReporterCallback
+{
 
-  void (*error_reporter)(void* user_data, const char* format,
-                         va_list args) = nullptr;
+    void *user_data = nullptr;
+
+    void (*error_reporter)(void *user_data, const char *format,
+                           va_list args) = nullptr;
 };
 
-struct TfLiteMicroModel {
-    std::shared_ptr<const tflite::Model> model;
-};
-
-struct TfLiteMicroInterpreter {
+struct TfLiteMicroInterpreter
+{
     tflite::MicroInterpreter *interpreter;
 };
 
-struct TfLiteMicroModelOption{
-    
+struct TfLiteMicroModelOption
+{
+
     int arena_size;
     uint8_t *arena;
     const tflite::Model *model;
 };
 
-struct TfLiteMicroInterpreterOption {
-
-    tflite::ErrorReporter* error_reporter;
+struct TfLiteMicroInterpreterOption
+{
+    tflite::ErrorReporter *error_reporter;
 };
 
 #endif

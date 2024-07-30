@@ -105,7 +105,7 @@ extern "C"
     {
         if (interpreter != NULL)
         {
-            delete interpreter;
+            memset(interpreter, 0x00, sizeof(TfLiteMicroInterpreter));
         }
     }
 

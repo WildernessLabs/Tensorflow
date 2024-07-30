@@ -89,7 +89,7 @@ extern "C"
     {
         if (option != NULL)
         {
-            delete option;
+            memset(option, 0x00, sizeof(TfLiteMicroInterpreterOption));
         }
     }
 
@@ -97,7 +97,7 @@ extern "C"
     {
         if (model != NULL)
         {
-            delete model;
+            memset(model, 0x00, sizeof(TfLiteMicroModelOption));
         }
     }
 

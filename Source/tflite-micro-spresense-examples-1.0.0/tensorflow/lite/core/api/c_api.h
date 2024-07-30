@@ -361,6 +361,36 @@ extern "C"
 
     TFL_CAPI_EXPORT void TfLiteMicroSetFloatData(const TfLiteTensor *tensor, int index, float value);
 
+    /****************************************************************************
+     * Name: TfLiteMicroSetData
+     *
+     * Description:
+     *   Get Tensor data pointer according to the type.
+     *
+     * Parameters:
+     *   tensor : Pointer to the Tensor.
+     *   index  : Pointer index.
+     *   value  : Value defined.
+     *   type   : Tensor type.
+     *
+     ****************************************************************************/
+    TFL_CAPI_EXPORT void TfLiteMicroSetData(const TfLiteTensor *tensor, int index, void *value, TfLiteType type);
+
+    /****************************************************************************
+     * Name: TfLiteMicroGetData
+     *
+     * Description:
+     *   Get Tensor data pointer according to the type.
+     *
+     * Parameters:
+     *   tensor : Pointer to the Tensor.
+     *   index  : Pointer index.
+     *   value  : Value defined.
+     *   type   : Tensor type.
+     *
+     ****************************************************************************/
+    TFL_CAPI_EXPORT void *TfLiteMicroGetData(const TfLiteTensor *tensor, int index, TfLiteType type);
+
 #ifdef __cplusplus
 }
 #endif

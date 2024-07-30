@@ -53,7 +53,7 @@ extern "C"
 
         if (option == nullptr)
         {
-            printf("[ERROR] - Falied to create an interpreter option\n");
+            printf("[ERROR] - Failed to create an interpreter option\n");
             return nullptr;
         }
 
@@ -68,7 +68,7 @@ extern "C"
     {
         if (interpreter_option == nullptr || model_option == nullptr)
         {
-            printf("[ERROR] Falied to create interpreter\n");
+            printf("[ERROR] Failed to create interpreter\n");
             return nullptr;
         }
 
@@ -157,6 +157,137 @@ extern "C"
     void TfLiteMicroSetInt8Data(const TfLiteTensor *tensor, int index, int8_t value)
     {
         tensor->data.int8[index] = value;
+    }
+
+    void TfLiteMicroSetData(const TfLiteTensor *tensor, int index, void *value, TfLiteType type)
+    {
+        switch (type) 
+        {
+            case kTfLiteFloat32:
+                tensor->data.f[index] = *((float*)value);
+            break;
+
+            case kTfLiteInt16:
+                tensor->data.i16[index] = *((int16_t*)value);
+            break;
+
+            case kTfLiteInt32:
+                tensor->data.i32[index] = *((int32_t*)value);
+            break;
+
+            case kTfLiteUInt32:
+                tensor->data.u32[index] = *((uint32_t*)value);
+            break;
+
+            case kTfLiteUInt8:
+                tensor->data.uint8[index] = *((uint8_t*)value);
+            break;
+
+            case kTfLiteInt8:
+                tensor->data.int8[index] = *((int8_t*)value);
+            break;
+
+            case kTfLiteInt64:
+                tensor->data.i64[index] = *((int64_t*)value);
+            break;
+
+            case kTfLiteUInt64:
+                tensor->data.u64[index] = *((uint64_t*)value);
+            break;
+
+            case kTfLiteBool:
+                tensor->data.b[index] = *((bool*)value);
+            break;
+
+            case kTfLiteComplex64:
+                tensor->data.c64[index] = *((TfLiteComplex64*)value);
+            break;
+
+            case kTfLiteComplex128:
+                tensor->data.c128[index] = *((TfLiteComplex128*)value);
+            break;
+
+            case kTfLiteString:
+                tensor->data.raw[index] = *((char*)value);
+            break;
+
+            case kTfLiteFloat16:
+                tensor->data.f16[index] = *((TfLiteFloat16*)value);
+            break;
+
+            case kTfLiteFloat64:
+                tensor->data.f64[index] = *((double*)value);
+            break;
+
+            default:
+            break;
+        }
+    }
+
+    void *TfLiteMicroGetData(const TfLiteTensor *tensor, int index, TfLiteType type)
+    {
+        switch (type) 
+        {
+            case kTfLiteFloat32:
+                return &tensor->data.f[index];
+
+            case kTfLiteInt16:
+                return &tensor->data.i16[index];
+            break;
+
+            case kTfLiteInt32:
+                return &tensor->data.i32[index];
+            break;
+
+            case kTfLiteUInt32:
+                return &tensor->data.u32[index];
+            break;
+
+            case kTfLiteUInt8:
+                return &tensor->data.uint8[index];
+            break;
+
+            case kTfLiteInt8:
+                return &tensor->data.int8[index];
+            break;
+
+            case kTfLiteInt64:
+                return &tensor->data.i64[index];
+            break;
+
+            case kTfLiteUInt64:
+                return &tensor->data.u64[index];
+            break;
+
+            case kTfLiteBool:
+                return &tensor->data.b[index];
+            break;
+
+            case kTfLiteComplex64:
+                return &tensor->data.c64[index];
+            break;
+
+            case kTfLiteComplex128:
+                return &tensor->data.c128[index];
+            break;
+
+            case kTfLiteString:
+                return &tensor->data.raw[index];
+            break;
+
+            case kTfLiteFloat16:
+                return &tensor->data.f16[index];
+            break;
+
+            case kTfLiteFloat64:
+                return &tensor->data.f64[index];
+            break;
+
+            default:
+            return 0
+            ;
+        }
+
     }
 
     float TfLiteMicroGetFloatData(const TfLiteTensor *tensor, int index)

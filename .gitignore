@@ -33,3 +33,6 @@
 
 # Debug files
 *.disassembly
+
+# Zip file
+*.zip

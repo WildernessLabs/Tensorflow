@@ -14,10 +14,10 @@
 # ==============================================================================
 
 # Settings for Spresense based platforms
-# For spresense, Tensorflow lite Microcontroller is used as a library.
+# For spresense, TensorFlow lite Microcontroller is used as a library.
 
 # This setting makefile accept 4 optional parameters on the make command line.
-# These options below are needed for build an example of Tensorflow Microcontroller.
+# These options below are needed for build an example of TensorFlow Microcontroller.
 # But just build a library, no need to add those options.
 #
 #   SPRESENSE_DEFS       : This is the file path to Make.defs which includes configuration
@@ -44,7 +44,7 @@ SPRESENSE_PLATFORM_FLAGS := \
   -DSPRESENSE_CONFIG_H="\"$(SPRESENSE_CONFIG_H)\"" \
   -I$(SPRESENSE_CURDIR)/wrapper_include
 
-# Load application for Tensorflow lite micro in Spresense
+# Load application for TensorFlow lite micro in Spresense
 ifneq ($(SPRESENSE_APP_TFMAKE),)
 ifeq ($(CONFIG_EXTERNALS_TENSORFLOW_EXAMPLE_NONE),y)
 -include $(SPRESENSE_APP_TFMAKE)
@@ -169,8 +169,8 @@ $(OBJDIR)/%.o: %.c
 $(LIBTFLM): $(OBJS)
 	@mkdir -p $(dir $@)
 	$(AR) $(ARFLAGS) $(LIBTFLM) $(OBJS)
-	$(LD) -Map $(GENDIR)/TensorflowDLL.map -Bsymbolic -G -Bdynamic -o $(GENDIR)/Tensorflow.so $(OBJS) $(LIBS)
-	$(OBJDUMP) -d -S -C $(GENDIR)/Tensorflow.so > $(GENDIR)/Tensorflow.disassembly
+	$(LD) -Map $(GENDIR)/TensorFlowDLL.map -Bsymbolic -G -Bdynamic -o $(GENDIR)/TensorFlow.so $(OBJS) $(LIBS)
+	$(OBJDUMP) -d -S -C $(GENDIR)/TensorFlow.so > $(GENDIR)/TensorFlow.disassembly
 
 libtflm: $(LIBTFLM)
 

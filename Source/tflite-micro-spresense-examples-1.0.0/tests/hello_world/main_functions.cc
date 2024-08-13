@@ -94,7 +94,7 @@ void tensorflow_hello_world_test_setup() {
 }
 
 // The name of this function is important for Arduino compatibility.
-extern "C" void tensorflow_hello_world_test_loop(uint32_t x_out, uint32_t y_out) {
+extern "C" void tensorflow_hello_world_test_loop(intptr_t x_out, intptr_t y_out) {
   // Calculate an x value to feed into the model. We compare the current
   // inference_count to the number of inferences per cycle to determine
   // our position within the range of possible x values the model was

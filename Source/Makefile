@@ -33,7 +33,10 @@
 #
 ############################################################################
 
-TOPDIR = ../../Meadow/nuttx
+ifndef TOPDIR
+TOPDIR = ../../Rebase/nuttx
+endif
+
 include $(TOPDIR)/.config
 include $(TOPDIR)/tools/Config.mk
 # -include $(SDKDIR)/Make.defs
@@ -75,11 +78,12 @@ TENSORFLOW_LIBOUT = $(TENSORFLOW_DIR)$(DELIM)gen
 SPRESENSE_MAKEDEF = $(TOPDIR)$(DELIM)tools$(DELIM)Config.mk
 SPRESENSE_TF_C_RUNTIME = $(CUR_DIR)$(DELIM)c-runtime$(DELIM)Runtime.mk
 
-TF_MAKECMD := make OPTIMIZED_KERNEL_DIR=$(TENSORFLOW_OPTKERNEL) \
+TF_MAKECMD := make TOPDIR=$(TOPDIR) \
+					OPTIMIZED_KERNEL_DIR=$(TENSORFLOW_OPTKERNEL) \
 					TARGET=$(TENSORFLOW_TARGET) \
 					TARGET_ARCH=cortex-m7 \
-					SPRESENSE_DEFS=..$(DELIM)$(SPRESENSE_MAKEDEF) \
-					SPRESENSE_CONFIG_H=..$(DELIM)$(TOPDIR)$(DELIM)include$(DELIM)nuttx$(DELIM)config.h \
+					SPRESENSE_DEFS=$(SPRESENSE_MAKEDEF) \
+					SPRESENSE_CONFIG_H=$(TOPDIR)$(DELIM)include$(DELIM)nuttx$(DELIM)config.h \
 					SPRESENSE_CURDIR=$(CUR_DIR) \
 					SPRESENSE_APP_TFMAKE=$(SPRESENSE_TF_C_RUNTIME)
 

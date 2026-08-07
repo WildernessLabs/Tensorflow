@@ -32,7 +32,9 @@
 # Define empty variable for add spresense specific settings
 SPRESENSE_PLATFORM_FLAGS :=
 
+ifndef TOPDIR
 TOPDIR = ../../../Meadow/nuttx
+endif
 include $(TOPDIR)/.config
 
 ifneq ($(SPRESENSE_DEFS),)
@@ -130,16 +132,20 @@ INCLUDES := \
   -Ithird_party/kissfft \
   -Ithird_party/ruy
 
+NUTTX_C_LIB := $(if $(wildcard $(TOPDIR)/staging/libuc.a),uc,c)
+NUTTX_MM_LIB := $(if $(wildcard $(TOPDIR)/staging/libumm.a),umm,mm)
+NUTTX_ARCH_LIB := $(if $(wildcard $(TOPDIR)/staging/libuarch.a),uarch,arch)
+
 LIBS := \
-  -L../../../Meadow/nuttx/staging \
+  -L$(TOPDIR)/staging \
   --start-group \
   -lproxies \
-  -luc \
-  -lumm \
-  -luarch \
+  -l$(NUTTX_C_LIB) \
+  -l$(NUTTX_MM_LIB) \
+  -l$(NUTTX_ARCH_LIB) \
   -lxx \
   -lapps \
-  ../../../Meadow/aot-support/libbuiltin.a \
+  $(TOPDIR)/../aot-support/libbuiltin.a \
   --end-group
 
 TFLM_CC_SRCS := $(shell find tensorflow -name "*.cc" -o -name "*.c")

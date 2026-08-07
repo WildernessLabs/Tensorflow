@@ -1,6 +1,6 @@
 #include "micro_time.h"
 
-#include "../../../../../../Meadow/nuttx/include/nuttx/config.h"
+#include SPRESENSE_CONFIG_H
 
 #include <cstdint>
 #include <time.h>

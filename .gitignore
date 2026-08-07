@@ -32,4 +32,5 @@
 *.app
 
 # Debug files
-*.disassembly
+**/*.disassembly
+**/*.zip
